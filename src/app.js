@@ -2,6 +2,8 @@ const express = require('express')
 const path = require('path')
 const app = express();
 
+const port = process.env.PORT || 3000
+
 
 console.log(__dirname)
 console.log(path.join(__dirname, '../public'))
@@ -34,5 +36,7 @@ app.get('/products', (req, res) => {
     })
 })
 
-
+app.listen(port, () => {
+    console.log('App running on port ' + port)
+})
 
