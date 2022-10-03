@@ -16,14 +16,14 @@ const provider = (provider, callback) => {
             //         state: item.state
             //     }
             // ))
-            callback(undefined, {
+            callback(undefined, 
                 response.body.data.map(item => (
                     {
                         redirect_uri: item.redirect_uri,
                         state: item.state
                     }
                 ))
-            })
+            )
         }
     })
 }

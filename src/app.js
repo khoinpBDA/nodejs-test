@@ -1,42 +1,38 @@
 const express = require('express')
-const path = require('path')
-const app = express();
+const app = express()
+require('./db/mongoose')
 
-const port = process.env.PORT || 3000
+// const kafkaConsumer = require('./kafka/consumer')
+// kafkaConsumer.consume()
 
 
-console.log(__dirname)
-console.log(path.join(__dirname, '../public'))
+const userRouter = require('./routers/user')
+const taskRouter = require('./routers/task')
+const producerEndpointRouter = require('./routers/producer.endpoints')
 
-const publicDir = path.join(__dirname, '../public')
-const helpDir = path.join(__dirname, '../public/help')
+app.use(express.json())
+app.use(userRouter)
+app.use(taskRouter)
+app.use(producerEndpointRouter)
 
-app.use(express.static(publicDir))
+// require('./cron-jobs/cronjobs')
 
-app.get('', (req, res)=>{
-    res.send('<h1>default page</h1>')
-})
+// const myWeb3 = require('./web3/web3')
+// myWeb3.run()
 
-app.get('/help', (req, res)=>{
-    res.send('help', ()=> {
-        app.use(express.static(helpDir))
-    })
-})
+const crypto = require('crypto');
 
-app.get('/products', (req, res) => {
-    if(!req.query.search){
-        return  res.send({
-            error: 'Thieu param search roi'
-        })
-    }
-    console.log(req.query.search)
-    res.send({
-        mode: 'test',
-        search: req.query.search
-    })
-})
+const query_string = 'coin=BNB&network=BSC&recvWindow=50000&timestamp=1664359404000'
+const apiSecret = 'OSPfcCJIhdV6xkDG9lBOqyMWmL4EuZq5g0b28tb2Q9sZMBAOXpmN7XkBrZAWNLBl'
 
-app.listen(port, () => {
-    console.log('App running on port ' + port)
-})
+const signature = crypto
+.createHmac('sha256', apiSecret)
+.update(query_string)
+.digest('hex')
+
+console.log(signature)
+
+
+
+module.exports = app
 
